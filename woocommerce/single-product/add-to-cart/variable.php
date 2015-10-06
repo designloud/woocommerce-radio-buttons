@@ -36,17 +36,22 @@ global $woocommerce, $product, $post;
                                     $selected_value = isset( $_POST[ 'attribute_' . sanitize_title( $name ) ] ) ? $_POST[ 'attribute_' . sanitize_title( $name ) ] : '';
 								//echo   $selected_value;
                                 // Get terms if this is a taxonomy - ordered
+                                $i = 0;
                                 if ( taxonomy_exists( sanitize_title( $name ) ) ) {
  
                                     $terms = get_terms( sanitize_title($name), array('menu_order' => 'ASC') );
-									
+																		
                                     foreach ( $terms as $term ) {
-                                        if ( ! in_array( $term->slug, $options ) ) continue;
-                                        echo '<input type="radio" value="' . strtolower($term->slug) . '" ' . checked( strtolower ($selected_value), strtolower ($term->slug), false ) . ' id="'. esc_attr( sanitize_title($name) ) .'" name="attribute_'. sanitize_title($name).'">' . apply_filters( 'woocommerce_variation_option_name', $term->name ).'<br />';
+                                    	
+                                        if ( ! in_array( $term->slug, $options ) ) continue; // Added <label> in here to be able to style text and radio button separately
+                                        echo '<input type="radio" value="' . strtolower($term->slug) . '" ' . checked( strtolower ($selected_value), strtolower ($term->slug), false ) . ' id="'. esc_attr( sanitize_title($name) ) . '-' . $i .'" name="attribute_'. sanitize_title($name).'"><label for="'. esc_attr( sanitize_title($name) ) . '-' . $i .'">' . apply_filters( 'woocommerce_variation_option_name', $term->name ).'</label><br />';
+                                    	$i++;
                                     }
                                 } else {
-                                    foreach ( $options as $option )
-                                        echo '<input type="radio" value="' .esc_attr( sanitize_title( $option ) ) . '" ' . checked( sanitize_title( $selected_value ), sanitize_title( $option ), false ) . ' id="'. esc_attr( sanitize_title($name) ) .'" name="attribute_'. sanitize_title($name).'">' . apply_filters( 'woocommerce_variation_option_name', $option ) . '<br />';
+                                    foreach ( $options as $option ) {  // Added <label> in here to be able to style text and radio button separately
+                                        echo '<input type="radio" value="' .esc_attr( sanitize_title( $option ) ) . '" ' . checked( sanitize_title( $selected_value ), sanitize_title( $option ), false ) . ' id="'. esc_attr( sanitize_title($name) ) . '-' . $i .'" name="attribute_'. sanitize_title($name).'"><label for="'. esc_attr( sanitize_title($name) ) . '-' . $i .'">' . apply_filters( 'woocommerce_variation_option_name', $option ) . '</label><br />';
+			                                	$i++;
+		                                }
                                 }
                             }
                         ?>
