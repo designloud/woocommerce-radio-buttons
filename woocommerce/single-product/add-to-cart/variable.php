@@ -37,13 +37,16 @@ global $woocommerce, $product, $post;
                               $selected_value = ( isset( $selected_attributes[ sanitize_title( $name ) ] ) ) ? $selected_attributes[ sanitize_title( $name ) ] : '';
                           else
                               $selected_value = isset( $_POST[ 'attribute_' . sanitize_title( $name ) ] ) ? $_POST[ 'attribute_' . sanitize_title( $name ) ] : '';
-					//echo   $selected_value;
+
+                          // Select the first option by default
+                          if ( '' == $selected_value )
+                            $selected_value = current( $options );
                           // Get terms if this is a taxonomy - ordered
                           $i = 0;
                           if ( taxonomy_exists( sanitize_title( $name ) ) ) {
 
                               $terms = get_terms( sanitize_title($name), array('menu_order' => 'ASC') );
-															
+
                               foreach ( $terms as $term ) {
                                   if ( ! in_array( $term->slug, $options ) ) continue; // Added <label> in here to be able to style text and radio button separately
                                   echo '<li class="radio__variations--item"><input type="radio" value="' . strtolower($term->slug) . '" ' . checked( strtolower ($selected_value), strtolower ($term->slug), false ) . ' id="'. esc_attr( sanitize_title($name) ) . '-' . $i .'" name="attribute_'. sanitize_title($name).'"><label for="'. esc_attr( sanitize_title($name) ) . '-' . $i .'">' . apply_filters( 'woocommerce_variation_option_name', $term->name ).'</label></li>';
